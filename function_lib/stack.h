@@ -32,6 +32,7 @@ public:
 	int IsFull()const { return DataCount == MemSize; };
 	void Put(const TData& Val);
 	TData Get();
+	void swap(TStack& first, TStack& second);
 	void print();
 	friend class TMultistack;
 	friend class TMultiRoot;

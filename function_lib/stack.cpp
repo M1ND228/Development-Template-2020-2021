@@ -59,6 +59,37 @@ TData TStack::Get()
 	return temp;
 }
 
+void TStack::swap(TStack& first, TStack& second)
+{
+	if (first.MemSize != second.MemSize)
+	{
+		throw std::exception("Разное количество памяти у стеков");;
+	}
+	TStack tmpF;
+	TStack tmpS;
+	for (int i = 0; i < first.MemSize; i++)		// Zapis first
+	{
+		if (first.IsEmpty()) { break; }
+		tmpF.Put(first.Get());
+	}
+	for (int i = 0; i < second.MemSize; i++)	// Zapis second 
+	{
+		if (second.IsEmpty()) { break; }
+		tmpS.Put(second.Get());
+	}
+
+	for (int i = 0; i < tmpS.MemSize; i++)		// Swap first <- second
+	{
+		if (tmpS.IsEmpty()) { break; }
+		first.Put(tmpS.Get());
+	}
+	for (int i = 0; i < tmpF.MemSize; i++)      // Swap first -> second
+	{
+		if (tmpF.IsEmpty()) { break; }
+		second.Put(tmpF.Get());
+	}
+}
+
 void TStack::print()
 {
 	for (int i = 0; i < DataCount; i++)
