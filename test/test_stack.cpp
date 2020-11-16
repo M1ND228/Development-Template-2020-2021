@@ -71,3 +71,31 @@ TEST(stack, throw_can_Get_number_with_empty_stack)
 	TStack st(10);
 	EXPECT_ANY_THROW(st.Get());
 }
+
+TEST(stack, can_Swap_elements_two_equal_stack)
+{
+	TStack t1;
+	TStack t2;
+
+	for (int i = 0; i < 5; i++)
+	{
+		t1.Put(i * 2);
+		t2.Put(i + 1);
+	}
+
+	EXPECT_NO_THROW(t1.swap(t1, t2));
+}
+
+TEST(stack, can_Swap_elements_two_NOequal_stack)
+{
+	TStack t1;
+	TStack t2;
+
+	for (int i = 0; i < 5; i++)
+	{
+		t1.Put(i * 2);
+		t2.Put(i + 1);
+	}
+	t2.Put(15);
+	EXPECT_NO_THROW(t1.swap(t1, t2));
+}
