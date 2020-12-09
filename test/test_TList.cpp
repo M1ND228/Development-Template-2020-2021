@@ -1,7 +1,7 @@
 #include <gtest.h>
 #include "TList.h"
 
-TEST(TList, can_create_)
+TEST(TList, can_create_TList)
 {
 	EXPECT_NO_THROW(TList<int> res);
 }
@@ -211,4 +211,99 @@ TEST(TList, exception_swap_negative_value)
 	}
 
 	EXPECT_ANY_THROW(res.swap(0, -1));
+}
+
+TEST(TList, MegerList_is_work)
+{
+	TList<int> list1;
+	TList<int> list2;
+
+	for (int i = 0; i < 10; i++)
+	{
+		list1.InsFirst(i + 1);
+		list2.InsFirst(i * 2);
+	}
+	EXPECT_NO_THROW(list1.MergerLists(list1, list2));
+}
+
+TEST(TList, can_MergerLists_merger_elements_check_size_main_list)
+{
+	TList<int> list1;
+	TList<int> list2;
+
+	list1.InsFirst(1);
+	list1.InsFirst(9);
+	list1.InsFirst(3);
+	list1.InsFirst(2);
+	list1.InsFirst(1);
+
+	list2.InsFirst(1);
+	list2.InsFirst(6);
+	list2.InsFirst(7);
+	list2.InsFirst(9);
+	list2.InsFirst(2);
+	list2.InsFirst(6);
+
+	list1.MergerLists(list1, list2);
+
+	EXPECT_EQ(6, list1.GetListLenght());
+}
+
+TEST(TList, can_MergerLists_merger_elements_check_size_second_list_notchange)
+{
+	TList<int> list1;
+	TList<int> list2;
+
+	list1.InsFirst(1);
+	list1.InsFirst(9);
+	list1.InsFirst(3);
+	list1.InsFirst(2);
+	list1.InsFirst(1);
+
+	list2.InsFirst(1);
+	list2.InsFirst(6);
+	list2.InsFirst(7);
+	list2.InsFirst(9);
+	list2.InsFirst(2);
+	list2.InsFirst(6);
+
+	list1.MergerLists(list1, list2);
+
+	EXPECT_EQ(6, list2.GetListLenght());
+}
+
+TEST(TList, exception_MergerList_empty_list_main)
+{
+	TList<int> list1;
+	TList<int> list2;
+
+	list2.InsFirst(1);
+	list2.InsFirst(2);
+	list2.InsFirst(3);
+	list2.InsFirst(4);
+	list2.InsFirst(5);
+	
+	EXPECT_ANY_THROW(list1.MergerLists(list1, list2));
+}
+
+TEST(TList, exception_MergerList_empty_list_second)
+{
+	TList<int> list1;
+	TList<int> list2;
+
+	list1.InsFirst(1);
+	list1.InsFirst(2);
+	list1.InsFirst(3);
+	list1.InsFirst(4);
+	list1.InsFirst(5);
+
+	EXPECT_ANY_THROW(list1.MergerLists(list1, list2));
+}
+
+TEST(TList, exception_MergerList_empty_lists)
+{
+	TList<int> list1;
+	TList<int> list2;
+
+	EXPECT_ANY_THROW(list1.MergerLists(list1, list2));
 }
