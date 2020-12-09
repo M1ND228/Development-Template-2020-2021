@@ -1,6 +1,6 @@
 #pragma once
-#include <exception>
 #include "TNode.h"
+#include <vector>
 
 template<typename T>
 class TList
@@ -29,6 +29,8 @@ public:
 	void Merge(TList<T>& list1, TList<T>& list2);
 	bool IsSort();
 	void swap(int posFirst, int posSecond);
+
+	void MergerLists(TList<T>& list1, TList<T>& list2);
 };
 
 template<typename T>
@@ -43,7 +45,7 @@ template<typename T>
 TList<T>::~TList<T>() { DelList(); }
 
 template<typename T>
-inline int TList<T>::GetListLenght() { return ListLen; }
+int TList<T>::GetListLenght() { return ListLen; }
 
 template<typename T>
 bool TList<T>::IsEmpty()
@@ -53,7 +55,7 @@ bool TList<T>::IsEmpty()
 }
 
 template<typename T>
-inline void TList<T>::InsFirst(T Val)
+void TList<T>::InsFirst(T Val)
 {
 	if (pFirst == nullptr)
 	{
@@ -277,7 +279,7 @@ T TList<T>::get(int pos)
 }
 
 template<typename T>
-inline void TList<T>::Merge(TList<T>& list1, TList<T>& list2)
+void TList<T>::Merge(TList<T>& list1, TList<T>& list2)
 {
 	if (!list1.IsSort() || !list2.IsSort())
 	{
@@ -311,7 +313,7 @@ inline void TList<T>::Merge(TList<T>& list1, TList<T>& list2)
 }
 
 template<typename T>
-inline bool TList<T>::IsSort()
+bool TList<T>::IsSort()
 {
 	for (int i = 0; i < ListLen - 1; i++)
 	{
@@ -348,4 +350,63 @@ void TList<T>::swap(int posFirst, int posSecond)
 		count++;
 	}
 	tmp->data = T1;
+}
+
+template<typename T>
+void TList<T>::MergerLists(TList<T>& list1, TList<T>& list2)
+{
+	if (list1.IsEmpty() || list2.IsEmpty()) { throw std::logic_error("Input error: List is empty"); }
+
+	int sizeListFirst = list1.GetListLenght();		// Size List1
+	int sizeListSecond = list2.GetListLenght();		// Size List2
+
+	int* dataAll = new int[sizeListFirst + sizeListSecond];		// Arr for all elements list1 + list2
+
+	int i = 0;
+	while (i < sizeListFirst)				// Write elements is list1
+	{
+		dataAll[i] = list1.pLast->data;
+		list1.DelLast();
+		i++;
+	}
+
+	i = 0;
+	int* data2 = new int[sizeListSecond];
+	while (i < sizeListSecond)				// Write elements is list2
+	{
+		data2[i] = list2.pLast->data;
+		dataAll[sizeListFirst + i] = list2.pLast->data;
+		list2.DelLast();
+		i++;
+	}
+
+	i = 0;
+	while (i < sizeListSecond)				// remove elements in list2
+	{
+		list2.InsLast(data2[i]);
+		i++;
+	}
+	delete[] data2;
+	
+	std::vector<int> all;					// vector for all elements
+	for (int i = 0; i < sizeListFirst + sizeListSecond; i++)
+	{
+		all.push_back(dataAll[i]);
+	}
+	
+	std::vector<int> resault;				// vector for unique elements
+	for (int i = 0; i < all.size(); i++)
+	{
+		auto pos = std::find(resault.begin(), resault.end(), all[i]);
+		if (pos == resault.end())
+		{
+			resault.push_back(all[i]);
+		}
+	}
+	
+	for (int i = 0; i < resault.size(); i++)	// push elements in list1
+	{
+		list1.InsLast(resault[i]);
+	}
+	delete[] dataAll;
 }
