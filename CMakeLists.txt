@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.6 FATAL_ERROR)
 
-project(shooter)
+project(expressions)
 
 include(cmake/function.cmake)
 
