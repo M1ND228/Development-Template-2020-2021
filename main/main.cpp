@@ -81,14 +81,13 @@ bool findLoop_KnownSize(std::list<int>& list, int& startPositionLoop)
 
 	std::list<int>::iterator firstElem = list.begin();
 
-	std::stack<int> tmp;
 	startPositionLoop = -1;
 	int i = 0;
 	while (true)
 	{
 		if (firstElem == list.end()) { return false; }
-		tmp.push(firstElem._Ptr->_Myval);
 		firstElem++;
+
 		if (i >= list.size()) { return true; }
 		i++; startPositionLoop++;
 	}
