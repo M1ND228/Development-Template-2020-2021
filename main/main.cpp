@@ -25,8 +25,7 @@ void menu(TText p)
 	std::cout << "13) Удаление строки на том же уровне\n";
 	std::cout << "14) Удаление раздела на том же уровне\n";
 	std::cout << "Работа с файлами: \n";
-	std::cout << "15) Прочитать текст с файла\n";
-	std::cout << "16) Вывести текст в файл\n\n";
+	std::cout << "15) Вывести текст в файл\n\n";
 
 	std::cout << "Выбранная строка: " << p.GetLine() << "\n";
 
@@ -37,11 +36,36 @@ int main()
 {
 	setlocale(LC_ALL, "RUS");
 	TTextLink tl;
-	tl.InitMemSystem(120);
+	tl.InitMemSystem(50);
+
 	TText p;
 
 	int choice;
 	std::string tmp;
+
+	p.SetLine("Zagolovok");
+
+	p.InsDownSection("podurov_1");
+
+	p.GoDownLink();
+	p.InsDownSection("podurov_2");
+
+	p.GoDownLink();
+	p.InsDownSection("podurov_3");
+
+	p.GoDownLink();
+	p.InsNextLine("Text for podurov_3");
+
+	p.GoFirstLink();
+	p.InsNextSection("Oglav_2");
+
+	p.GoNextLink();
+	p.InsDownSection("poduroven_Oglav_1");
+
+	p.GoDownLink();
+	p.InsDownSection("poduroven_Oglav_2");
+
+	p.GoFirstLink();
 
 	while (true)
 	{
@@ -132,11 +156,6 @@ int main()
 			system("pause");
 			break;
 		case 15:
-			system("cls");
-			p.Read(PATH);
-			system("pause");
-			break;
-		case 16:
 			system("cls");
 			p.Write(PATH);
 			system("pause");

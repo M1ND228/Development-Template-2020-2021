@@ -85,7 +85,7 @@ void TText::SetLine(std::string s)
 void TText::InsDownLine(std::string s)
 {
 	if (pCurrent == nullptr)
-		throw "text error";
+		throw "Text error";
 	else
 	{
 		PTTextLink pd = pCurrent->pDown;
@@ -99,7 +99,7 @@ void TText::InsDownLine(std::string s)
 void TText::InsDownSection(std::string s)
 {
 	if (pCurrent == nullptr)
-		throw "text error";
+		throw "Text error";
 	else
 	{
 		PTTextLink pd = pCurrent->pDown;
@@ -113,7 +113,7 @@ void TText::InsDownSection(std::string s)
 void TText::InsNextLine(std::string s)
 {
 	if (pCurrent == nullptr)
-		throw "text error";
+		throw "Text error";
 	else {
 		PTTextLink pd = pCurrent->pNext;
 		PTTextLink pl = new TTextLink("", pd, nullptr);
@@ -126,7 +126,7 @@ void TText::InsNextLine(std::string s)
 void TText::InsNextSection(std::string s)
 {
 	if (pCurrent == nullptr)
-		throw "text error";
+		throw "Text error";
 	else {
 		PTTextLink pd = pCurrent->pNext;
 		PTTextLink pl = new TTextLink("", nullptr, pd);
@@ -139,7 +139,7 @@ void TText::InsNextSection(std::string s)
 void TText::DelDownLine()
 {
 	if (pCurrent == nullptr)
-		throw "text error";
+		throw "Text error";
 	else if(pCurrent->pDown != nullptr)
 	{
 		PTTextLink pl1 = pCurrent->pDown;
@@ -152,7 +152,7 @@ void TText::DelDownLine()
 void TText::DelDownSection()
 {
 	if (pCurrent == nullptr)
-		throw "text error";
+		throw "Text error";
 	else if (pCurrent->pDown != nullptr)
 	{
 		PTTextLink pl1 = pCurrent->pDown;
@@ -164,7 +164,7 @@ void TText::DelDownSection()
 void TText::DelNextLine() 
 {
 	if (pCurrent == nullptr)
-		throw "text error";
+		throw "Text error";
 	else if (pCurrent->pNext != nullptr)
 	{
 		PTTextLink pl1 = pCurrent->pNext;
@@ -177,7 +177,7 @@ void TText::DelNextLine()
 void TText::DelNextSection()
 {
 	if (pCurrent == nullptr)
-		throw "text error";
+		throw "Text error";
 	else if (pCurrent->pNext != nullptr) {
 		PTTextLink pl1 = pCurrent->pNext;
 		PTTextLink pl2 = pl1->pNext;
@@ -281,50 +281,77 @@ void TText::Print()
 
 void TText::PrintText(PTTextLink ptl)
 {
+	PTTextLink pl1, pl2, pl = pFirst, cpl = nullptr;
+
+
+	unsigned int count = 0;
+	std::string res[100];
+
 	if (ptl != nullptr)
 	{
-		for (int i = 0; i < TextLevel; i++)
+		while (!St.empty())
+		{
+			St.pop();
+		}
+		while (1)
+		{
+			if (pl != nullptr)
+			{		
+				for (int space = 0; space < TextLevel; space++)
+				{
+					res[count] += "  ";
+				}
+				res[count] += pl->Str;
+				count++;
+				St.push(pl);
+				
+				if (pl->GetNext() != nullptr && St.size() > 1)
+				{
+					pl = pl->GetNext();
+					St.push(pl);
+				}
+				else
+				{
+					if (pl->GetDown() != nullptr)
+					{
+						pl = pl->GetDown();
+						St.push(pl);
+						TextLevel++;
+					}
+					else
+					{
+						while (!St.empty())
+						{
+							pl = St.top(); St.pop();
+						}
+						if (pl->GetNext() != nullptr)
+						{
+							pl = pl->GetNext();
+							St.push(pl);
+							TextLevel = 0;
+						}
+						else { break; }
+					}
+				}
+			}
+		}
+	}
+
+	for (int i = 0; i < count; i++)
+	{
+		std::cout << res[i] << "\n";
+	}
+}
+
+/*for (int i = 0; i < TextLevel; i++)
+		{
 			std::cout << "  ";
+		}
+		
 		std::cout << " " << ptl->Str << std::endl;
 		++TextLevel; PrintText(ptl->GetDown());
-		--TextLevel; PrintText(ptl->GetNext());
-	}
-}
-
-//чтение текста из файла
-void TText::Read(const char *pFileName)
-{
-	std::ifstream TxtFile(pFileName);
-	TextLevel = 0;
-	if (!TxtFile.is_open())
-		throw -1;
-	pFirst = ReadText(TxtFile);
-}
-
-PTTextLink TText::ReadText(std::ifstream &TxtFile)
-{
-	PTTextLink pHead, ptl;
-	pHead = ptl = new TTextLink();
-	while (TxtFile.eof() == 0) {
-		TxtFile.getline(StrBuf, BufLength, '\n');
-		if (StrBuf[0] == '}') {
-			TextLevel--;
-			break;
-		}
-		else if (StrBuf[0] == '{') {
-			ptl->pNext = new TTextLink(StrBuf, nullptr, nullptr);
-			ptl = ptl->pNext;
-		}
-	}
-	ptl = pHead;
-	if (pHead->pDown == nullptr) {
-		pHead = pHead->pNext;
-		delete ptl;
-	}
-	return pHead;
-}
-
-void TText::wr(std::ofstream& txt, PTTextLink ptl)
+		--TextLevel; PrintText(ptl->GetNext());*/
+void TText::workOutputFile(std::ofstream& txt, PTTextLink ptl)
 {
 	if (ptl != NULL)
 	{
@@ -333,8 +360,8 @@ void TText::wr(std::ofstream& txt, PTTextLink ptl)
 			txt << " ";
 		}
 		txt << ptl->Str << std::endl;
-		TextLevel++; wr(txt, ptl->GetDown());
-		TextLevel--; wr(txt, ptl->GetNext());
+		TextLevel++; workOutputFile(txt, ptl->GetDown());
+		TextLevel--; workOutputFile(txt, ptl->GetNext());
 	}
 }
 
@@ -343,5 +370,5 @@ void TText::Write(char* pFileName)
 	std::ofstream TxtFile;
 	TxtFile.open(pFileName);
 	TextLevel = 0;
-	wr(TxtFile, pFirst);
+	workOutputFile(TxtFile, pFirst);
 }

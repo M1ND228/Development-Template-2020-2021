@@ -46,8 +46,12 @@ void TTextLink::MemCleaner(TText &txt)
 	std::string st;
 
 	for (txt.Reset(); !txt.IsTextEnded(); txt.GoNext())
-		if (st.find("&&&") != 0) txt.SetLine("&&&" + txt.GetLine());
-
+	{
+		if (st.find("&&&") != 0)
+		{
+			txt.SetLine("&&&" + txt.GetLine());
+		}
+	}
 	PTTextLink pLink = MemHeader->pFree;
 	while (pLink != nullptr)
 	{

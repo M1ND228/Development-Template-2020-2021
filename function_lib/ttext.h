@@ -7,7 +7,6 @@
 #include "defines.h"
 #include "textlink.h"
 
-
 class TText
 {
 protected: 
@@ -19,7 +18,6 @@ protected:
 	std::stack<PTTextLink> St;
 	PTTextLink GetFirstAtom(PTTextLink pl);
 	void PrintText(PTTextLink ptl);
-	PTTextLink ReadText(std::ifstream &TxtFile);
 
 public:
 	TText(PTTextLink pl = nullptr);
@@ -38,28 +36,26 @@ public:
 	void SetLine(std::string s);			// замена текущей строки 
 	
 	// модификация
-	void InsDownLine(std::string s);    // вставка строки в подуровень
+	void InsDownLine(std::string s);    // вставка текста в подуровень
 	void InsDownSection(std::string s); // вставка раздела в подуровень
-	void InsNextLine(std::string s);    // вставка строки в том же уровне
+	void InsNextLine(std::string s);    // вставка текста в том же уровне
 	void InsNextSection(std::string s); // вставка раздела в том же уровне
 
-	void DelDownLine(void);        // удаление строки в подуровне
+	void DelDownLine(void);        // удаление текста в подуровне
 	void DelDownSection(void);     // удаление раздела в подуровне
-	void DelNextLine(void);        // удаление строки в том же уровне
+	void DelNextLine(void);        // удаление текста в том же уровне
 	void DelNextSection(void);     // удаление раздела в том же уровне
 
-	//итератор
+	// итератор
 	int Reset(); // установить на первую запись
 	int IsTextEnded()const; //таблица завершена?
 	int GoNext(); // переход к следующей записи
 
-	//работа с файлами
-	void Read(const char *pFileName); // ввод текста из файла
+	// работа с файлами
 	void Write(char *pFileName);// вывод текста в файл
+	void workOutputFile(std::ofstream& txt, PTTextLink ptl);
 
 	// печать
 	void Print();
-
-	void wr(std::ofstream& txt, PTTextLink ptl);
 };
 
