@@ -26,7 +26,7 @@ public:
 
 	void add(int _key);
 	void remove(int _key);
-	bool find(int _key);
+	bool search(int _key);
 
 	void printTable();
 };

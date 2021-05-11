@@ -68,10 +68,41 @@ void HashTable::add(int _key)
 
 void HashTable::remove(int _key)
 {
+	int index;
+	index = hash(_key, 0);
+
+	if (data[index].status == DELETED)
+	{
+		for (int i = 0; i < size; ++i)
+		{
+			index = hash(_key, i * i);
+			if (data[index].status == OCCUPIED && data[index].key == _key)
+				break;
+		}
+	}
+	// доп случай OCCUPIED но удалить нужно данные дальше по ключу 
+	data[index].key = 0;
+	data[index].status = DELETED;
 }
 
-bool HashTable::find(int _key)
+bool HashTable::search(int _key)
 {
+	int index;
+	index = hash(_key, 0);
+
+	if (data[index].status == DELETED)
+	{
+		for (int i = 0; i < size; ++i)
+		{
+			index = hash(_key, i * i);
+			if (data[index].status == OCCUPIED && data[index].key == _key)
+				return true;
+		}
+	}
+	else if (data[index].status == OCCUPIED)
+	{
+		return true;
+	}
 	return false;
 }
 
